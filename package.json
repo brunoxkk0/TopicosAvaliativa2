@@ -1,0 +1,25 @@
+{
+  "name": "topicosavaliativa2",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/brunoxkk0/TopicosAvaliativa2.git"
+  },
+  "author": "brunoxkk0",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/brunoxkk0/TopicosAvaliativa2/issues"
+  },
+  "homepage": "https://github.com/brunoxkk0/TopicosAvaliativa2#readme",
+  "dependencies": {
+    "axios": "^0.24.0",
+    "express": "^4.17.1",
+    "node-mailer": "^0.1.1",
+    "node-persist": "^3.1.0"
+  }
+}
