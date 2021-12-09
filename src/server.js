@@ -61,7 +61,7 @@ app.post("/noticia", async (req, res) => {
 
     const noticia = req.body;
 
-    if(!(noticia.title && noticia.resumo && noticia.url)){
+    if(!(noticia.titulo && noticia.resumo && noticia.url)){
         res.status(500).send("Notícia inválida.")
         return;
     }
