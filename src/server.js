@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const nodemailer = require('nodemailer');
 const uuid = require("uuid").v4;
 
 const noticias = [];
@@ -34,7 +35,6 @@ async function existsEmail(email){
     )
 }
 
-
 async function registerEmail(email){
     inscricao_emails.push(email)
 }
@@ -55,6 +55,7 @@ app.post("/inscricao", async (req, res) => {
 
     await registerEmail(email)
     res.send("Email " + email.email + " cadastrado.")
+
 });
 
 app.post("/noticia", async (req, res) => {
@@ -72,21 +73,9 @@ app.post("/noticia", async (req, res) => {
     }
 
     const id = await postNoticia(noticia);
-    res.send("Notícia adicionada. ID:" + id)
-});
-
-
-app.post("/noticia", async (req, res) => {
-
-    const noticia = req.body;
-
-    if(await existsNoticia(noticia)){
-        res.status(500).send("Esta notícia já existe.")
-        return;
-    }
-
-    const id = await postNoticia(noticia);
-    res.send("Notícia adicionada. ID:" + id)
+    res.send({
+        id: id
+    })
 });
 
 app.get("/noticia", async (req, res) => {
@@ -117,6 +106,64 @@ app.get("/noticia/:id", async (req, res) => {
     res.status(500).send("This request is invalid.");
 });
 
+app.put("/enviar/:noticia", async (req, res) => {
+
+    const sent_emails = []
+
+    const noticia = req.params.noticia;
+
+    if(noticia){
+
+        const news = await getNoticia(noticia);
+
+        if(news){
+
+            for(let i in inscricao_emails){
+                const email = inscricao_emails[i];
+                await sendEmail(news, email);
+                sent_emails.push(email)
+            }
+
+            res.status(200).send(sent_emails);
+            return;
+        }
+
+    }
+
+    res.status(500).send("Não foi possível encontrar uma notícia com esse id.");
+
+})
+
 app.listen(1234, () => {
     console.log("Servidor ligado na porta: 1234")
 })
+
+const transporter = nodemailer.createTransport({
+    host: 'smtp.ethereal.email',
+    port: 587,
+    secure: false,
+    auth: {
+        user: 'kasey.hoeger96@ethereal.email',
+        pass: 'ys4x64sFxhUp6rGmqM'
+    },
+    tls: {
+        rejectUnauthorized: false
+    }
+})
+
+async function sendEmail(news, email){
+    if(news && email){
+
+        const data = {
+            from: 'kasey.hoeger96@ethereal.email',
+            to: email.email,
+            subject: news.titulo,
+            text: news.titulo + "\n" + news.resumo + "\n" + news.url,
+            html: "<h1>" + news.titulo + "</h1>" + "<h4>" + news.resumo + "</h4>" + "<h5>" + news.url + "</h5>"
+        };
+
+        const info = await transporter.sendMail(data)
+        await setTimeout(() => {}, 2000)
+        return info;
+    }
+}
