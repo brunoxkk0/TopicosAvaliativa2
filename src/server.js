@@ -121,7 +121,7 @@ app.put("/enviar/:noticia", async (req, res) => {
             for(let i in inscricao_emails){
                 const email = inscricao_emails[i];
                 await sendEmail(news, email);
-                sent_emails.push(email)
+                sent_emails.push(email.email)
             }
 
             res.status(200).send(sent_emails);

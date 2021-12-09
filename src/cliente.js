@@ -50,16 +50,6 @@ axios.post("http://localhost:1234/noticia", {
     console.log(err.response.data)
 })
 
-axios.post("http://localhost:1234/noticia", {
-    titulo: "Noticia 4",
-    resumo: "Noticia teste.",
-    url: "noticias.news.br/teste_url"
-}).then((res) => {
-    console.log(res.data)
-}).catch(err => {
-    console.log(err.response.data)
-})
-
 axios.post("http://localhost:1234/inscricao", {
     email: "rosie.ankunding7@ethereal.email"
 }).then((res) => {
